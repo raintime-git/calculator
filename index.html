@@ -42,8 +42,8 @@
         }
         
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -64,26 +64,26 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: white;
+            background: #ffffff;
             border-radius: 0;
             box-shadow: none;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeIn 0.6s ease-out;
         }
         
         @media (min-width: 401px) {
             .calculator-app {
-                border-radius: 24px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                border-radius: 20px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             }
             .calculator-container {
-                border-radius: 24px;
+                border-radius: 20px;
             }
         }
         
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -93,28 +93,31 @@
         
         .display-area {
             flex: 1;
-            min-height: 30vh;
+            min-height: 35vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 32px 24px;
+            justify-content: space-between;
+            padding: 24px;
+            background: #ffffff;
         }
         
         .buttons-area {
             flex: 0 0 auto;
-            height: 60vh;
-            max-height: 480px;
-            min-height: 360px;
+            height: 55vh;
+            max-height: 440px;
+            min-height: 320px;
         }
         
         .footer-area {
             flex: 0 0 auto;
-            height: 50px;
+            height: 60px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #ff9500 0%, #ff8500 100%);
-            color: white;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
         }
         
         .button-grid {
@@ -122,72 +125,80 @@
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(5, 1fr);
             height: 100%;
-            gap: 1px;
-            background-color: #e5e7eb;
+            gap: 0.5px;
+            background-color: #e9ecef;
+            padding: 0.5px;
         }
         
         .calc-button {
-            background: white;
+            background: #ffffff;
             border: none;
             outline: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 400;
-            transition: all 0.1s ease;
+            transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             cursor: pointer;
             position: relative;
+            color: #333;
         }
         
         .calc-button:active {
-            background-color: #f3f4f6;
-            transform: scale(0.95);
+            background-color: #e9ecef;
+            transform: scale(0.96);
         }
         
         .calc-button.operator {
-            background: #ff9500;
+            background: #007AFF;
             color: white;
-            font-size: 32px;
+            font-size: 28px;
+            font-weight: 300;
         }
         
         .calc-button.operator:active {
-            background-color: #e6820e;
+            background-color: #0056CC;
         }
         
         .calc-button.function {
-            background: #a6a6a6;
-            color: white;
-            font-size: 24px;
+            background: #f1f3f5;
+            color: #495057;
+            font-size: 22px;
+            font-weight: 500;
         }
         
         .calc-button.function:active {
-            background-color: #8f8f8f;
+            background-color: #e9ecef;
         }
         
         .calc-button.equals {
-            background: linear-gradient(135deg, #ff9500 0%, #ff8500 100%);
+            background: #007AFF;
             color: white;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 300;
             grid-column: 4;
             grid-row: 4 / 6;
         }
         
+        .calc-button.equals:active {
+            background-color: #0056CC;
+        }
+        
         .calc-button.zero {
             grid-column: 1 / 3;
             justify-content: flex-start;
-            padding-left: 32px;
+            padding-left: 28px;
         }
 
-        /* 修复显示区域切换动画 */
         .display-content {
-            transition: opacity 0.3s ease-in-out;
+            transition: all 0.3s ease;
             position: relative;
         }
         
-        .display-content.hidden {
-            opacity: 0;
+        .display-content.blurred {
+            opacity: 0.3;
+            transform: scale(0.98);
         }
         
         .welcome-overlay {
@@ -199,26 +210,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.95);
-            transition: opacity 0.3s ease-in-out;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
             z-index: 10;
+            border-radius: 12px;
+        }
+        
+        .cat-icon {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+        }
+        
+        .cat-icon:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+        
+        .cat-icon:active {
+            transform: scale(1.2) rotate(5deg);
         }
         
         /* 手机横屏适配 */
         @media (orientation: landscape) and (max-height: 500px) {
             .display-area {
-                min-height: 25vh;
+                min-height: 30vh;
                 padding: 16px 24px;
             }
             .buttons-area {
-                height: 65vh;
-                min-height: 280px;
+                height: 60vh;
+                min-height: 260px;
             }
             .footer-area {
-                height: 40px;
+                height: 50px;
             }
             .calc-button {
-                font-size: 24px;
+                font-size: 20px;
             }
         }
     </style>
@@ -237,15 +263,15 @@
             const [operation, setOperation] = useState(null);
             const [waitingForOperand, setWaitingForOperand] = useState(false);
             
-            // 欢迎状态管理 - 修复闪屏问题
+            // 欢迎状态管理
             const [showWelcome, setShowWelcome] = useState(false);
             const [welcomeText, setWelcomeText] = useState('');
             const [isTyping, setIsTyping] = useState(false);
             const [isWelcomeActive, setIsWelcomeActive] = useState(false);
             
             // 小猫状态
-            const [catEmotion, setCatEmotion] = useState('😸');
-            const [catAnimation, setCatAnimation] = useState('animate-pulse');
+            const [catEmotion, setCatEmotion] = useState('😺');
+            const [catAnimation, setCatAnimation] = useState('');
             const [totalCatClicks, setTotalCatClicks] = useState(0);
             const [hasShownFirstWelcome, setHasShownFirstWelcome] = useState(false);
             
@@ -285,18 +311,18 @@
                     
                     const now = ctx.currentTime;
                     gain.gain.setValueAtTime(0, now);
-                    gain.gain.linearRampToValueAtTime(0.1, now + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    gain.gain.linearRampToValueAtTime(0.08, now + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
                     
                     osc.start(now);
-                    osc.stop(now + 0.2);
+                    osc.stop(now + 0.15);
                     
                 } catch (error) {
                     console.log('Audio not available');
                 }
             }, []);
 
-            const catEmotions = ['😽', '🙀', '😻', '😹', '😺', '🐱', '😿'];
+            const catEmotions = ['😺', '😸', '😻', '😽', '🙀', '😹', '😿', '🐱'];
             const welcomeMessages = [
                 "嗨！我是木心，我们一起算数学吧！",
                 "哇～你好棒！我们来玩数字游戏！", 
@@ -330,54 +356,51 @@
                 }
             }, []);
 
-            // 修复的欢迎动画触发
+            // 欢迎动画触发 - 修复闪屏问题
             const triggerWelcome = useCallback((message) => {
-                // 防止重复触发
                 if (isWelcomeActive || isTyping) {
                     return;
                 }
                 
                 clearAllTimeouts();
                 setIsWelcomeActive(true);
-                
-                // 开始显示欢迎界面
-                setShowWelcome(true);
-                setWelcomeText('');
                 setIsTyping(true);
+                setWelcomeText('');
                 
-                playSound('C');
-                
-                let index = 0;
-                const typeText = () => {
-                    if (index <= message.length) {
-                        setWelcomeText(message.slice(0, index));
-                        index++;
-                        
-                        typeTimeoutRef.current = setTimeout(typeText, 60);
-                        
-                        if (index % 5 === 0 && index > 0) {
-                            playSound(String(index % 10));
-                        }
-                    } else {
-                        // 完成打字
-                        setIsTyping(false);
-                        
-                        // 延迟隐藏欢迎界面
-                        welcomeTimeoutRef.current = setTimeout(() => {
-                            setShowWelcome(false);
+                // 延迟显示避免闪屏
+                requestAnimationFrame(() => {
+                    setShowWelcome(true);
+                    playSound('C');
+                    
+                    let index = 0;
+                    const typeText = () => {
+                        if (index <= message.length) {
+                            setWelcomeText(message.slice(0, index));
+                            index++;
+                            
+                            typeTimeoutRef.current = setTimeout(typeText, 50);
+                            
+                            if (index % 4 === 0 && index > 0) {
+                                playSound(String(index % 10));
+                            }
+                        } else {
+                            setIsTyping(false);
+                            
                             welcomeTimeoutRef.current = setTimeout(() => {
-                                setIsWelcomeActive(false);
-                            }, 300); // 等待动画完成
-                        }, 1800);
-                    }
-                };
-                
-                typeTimeoutRef.current = setTimeout(typeText, 200);
+                                setShowWelcome(false);
+                                welcomeTimeoutRef.current = setTimeout(() => {
+                                    setIsWelcomeActive(false);
+                                }, 300);
+                            }, 2000);
+                        }
+                    };
+                    
+                    typeTimeoutRef.current = setTimeout(typeText, 300);
+                });
             }, [isWelcomeActive, isTyping, playSound, clearAllTimeouts]);
 
-            // 修复的小猫点击处理
+            // 小猫点击处理 - 修复互动问题
             const handleCatClick = useCallback(() => {
-                // 如果正在显示欢迎语，忽略点击
                 if (isWelcomeActive) {
                     return;
                 }
@@ -390,8 +413,8 @@
                 setCatAnimation('animate-bounce');
                 
                 playSound('C');
-                setTimeout(() => playSound('5'), 150);
-                setTimeout(() => playSound('3'), 300);
+                setTimeout(() => playSound('5'), 100);
+                setTimeout(() => playSound('8'), 200);
                 
                 let shouldShowWelcome = false;
                 
@@ -399,27 +422,28 @@
                     shouldShowWelcome = true;
                     setHasShownFirstWelcome(true);
                 } else {
-                    shouldShowWelcome = (newTotal % 2 === 0);
+                    shouldShowWelcome = (newTotal % 3 === 0);
                 }
                 
                 if (shouldShowWelcome) {
                     const randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-                    triggerWelcome(randomMessage);
+                    setTimeout(() => triggerWelcome(randomMessage), 200);
                 }
                 
                 setTimeout(() => {
-                    setCatEmotion('😸');
-                    setCatAnimation('animate-pulse');
-                }, 1000);
+                    setCatEmotion('😺');
+                    setCatAnimation('');
+                }, 1200);
             }, [totalCatClicks, hasShownFirstWelcome, isWelcomeActive, playSound, triggerWelcome]);
 
-            // 页面首次加载 - 延迟触发避免闪屏
+            // 页面首次加载
             useEffect(() => {
                 const initialTimeout = setTimeout(() => {
                     if (!hasShownFirstWelcome && !isWelcomeActive) {
                         triggerWelcome("嗨！我是木心，很高兴遇见你！点击我可以听到更多话哦～");
+                        setHasShownFirstWelcome(true);
                     }
-                }, 1000);
+                }, 1500);
                 
                 return () => clearTimeout(initialTimeout);
             }, []);
@@ -444,7 +468,7 @@
                 if (value.length > 12) {
                     const num = parseFloat(value);
                     if (!isNaN(num) && isFinite(num)) {
-                        return num.toExponential(6);
+                        return num.toExponential(5);
                     }
                 }
                 
@@ -456,12 +480,12 @@
                     return '错误';
                 }
                 
-                if (Number.isInteger(num) && Math.abs(num) < 1e12) {
+                if (Number.isInteger(num) && Math.abs(num) < 1e10) {
                     return num.toString();
                 }
                 
-                if (Math.abs(num) >= 1e12 || (Math.abs(num) < 1e-8 && num !== 0)) {
-                    return num.toExponential(6);
+                if (Math.abs(num) >= 1e10 || (Math.abs(num) < 1e-6 && num !== 0)) {
+                    return num.toExponential(5);
                 }
                 
                 let result = num.toPrecision(10);
@@ -470,18 +494,15 @@
                 return result;
             };
 
-            // 计算器功能 - 修复数字输入时的状态切换
+            // 计算器核心功能
             const inputNumber = useCallback((num) => {
                 playSound(String(num));
                 
-                // 如果正在显示欢迎语，直接取消显示
                 if (showWelcome) {
                     clearAllTimeouts();
                     setShowWelcome(false);
                     setIsWelcomeActive(false);
                     setIsTyping(false);
-                    setDisplay(String(num));
-                    return;
                 }
                 
                 if (display === '错误') {
@@ -497,7 +518,7 @@
                     setWaitingForOperand(false);
                 } else {
                     const newDisplay = display === '0' ? String(num) : display + num;
-                    if (newDisplay.length <= 15) {
+                    if (newDisplay.length <= 12) {
                         setDisplay(newDisplay);
                     }
                 }
@@ -511,8 +532,6 @@
                     setShowWelcome(false);
                     setIsWelcomeActive(false);
                     setIsTyping(false);
-                    setDisplay('0.');
-                    return;
                 }
                 
                 if (display === '错误') {
@@ -539,8 +558,6 @@
                     setShowWelcome(false);
                     setIsWelcomeActive(false);
                     setIsTyping(false);
-                    setDisplay('0');
-                    return;
                 }
                 
                 if (display === '错误' || waitingForOperand) {
@@ -631,10 +648,10 @@
 
             const getFontSize = () => {
                 const len = display.length;
-                if (len <= 6) return '4rem';
-                if (len <= 9) return '3.2rem';
-                if (len <= 12) return '2.6rem';
-                return '2rem';
+                if (len <= 6) return '3.5rem';
+                if (len <= 9) return '2.8rem';
+                if (len <= 12) return '2.2rem';
+                return '1.8rem';
             };
 
             return React.createElement('div', {
@@ -651,26 +668,26 @@
             }, [
                 // Display Area
                 React.createElement('div', {
-                    className: "display-area bg-black text-white",
+                    className: "display-area",
                     key: "display-area"
                 }, [
                     // Header
                     React.createElement('div', {
-                        className: "flex items-center justify-between mb-4",
+                        className: "flex items-center justify-between mb-6",
                         key: "header"
                     }, [
                         React.createElement('div', {
-                            className: `text-2xl cursor-pointer select-none transition-all duration-300 hover:scale-110 ${catAnimation}`,
+                            className: `text-2xl cursor-pointer select-none cat-icon ${catAnimation}`,
                             onClick: handleCatClick,
                             title: "点击我互动！",
                             key: "cat"
                         }, catEmotion),
                         React.createElement('h1', {
-                            className: "text-sm font-light tracking-wider text-gray-300",
+                            className: "text-lg font-normal tracking-wide text-gray-600",
                             key: "title"
                         }, "木心的计算器"),
                         React.createElement('div', {
-                            className: "text-xs text-gray-500",
+                            className: "text-xs text-gray-400 font-light",
                             key: "ai"
                         }, "AI")
                     ]),
@@ -682,15 +699,16 @@
                     }, [
                         // Main Display
                         React.createElement('div', {
-                            className: `display-content flex items-end justify-end h-full ${showWelcome ? 'hidden' : ''}`,
+                            className: `display-content flex items-end justify-end h-full ${showWelcome ? 'blurred' : ''}`,
                             key: "main-display"
                         }, React.createElement('div', {
-                            className: "text-right font-thin overflow-hidden",
+                            className: "text-right font-light overflow-hidden text-gray-900",
                             style: { 
-                                fontWeight: '200',
-                                letterSpacing: '2px',
+                                fontWeight: '300',
+                                letterSpacing: '1px',
                                 fontSize: getFontSize(),
-                                wordBreak: 'break-all'
+                                wordBreak: 'break-all',
+                                lineHeight: '1.1'
                             }
                         }, formatDisplay(display))),
                         
@@ -699,18 +717,18 @@
                             className: "welcome-overlay",
                             key: "welcome-overlay"
                         }, React.createElement('div', {
-                            className: `text-center font-light transition-opacity duration-500 ${isTyping ? 'opacity-100' : 'opacity-80'}`,
+                            className: "text-center font-light px-4",
                             style: { 
-                                fontSize: '1.2rem',
-                                letterSpacing: '1px',
-                                lineHeight: '1.5',
-                                color: '#fff',
+                                fontSize: '1.1rem',
+                                letterSpacing: '0.5px',
+                                lineHeight: '1.6',
+                                color: '#495057',
                                 maxWidth: '90%'
                             }
                         }, [
                             welcomeText,
                             isTyping && React.createElement('span', {
-                                className: "animate-pulse ml-1 text-orange-400",
+                                className: "animate-pulse ml-1 text-blue-500",
                                 key: "cursor"
                             }, "|")
                         ]))
@@ -718,11 +736,11 @@
                     
                     // Status
                     React.createElement('div', {
-                        className: "mt-4 text-xs text-gray-400 text-center",
+                        className: "mt-6 text-xs text-gray-500 text-center font-light",
                         key: "status"
                     }, showWelcome ? 
                         '🎵 木心在说话...' : 
-                        `🎵 点击小猫听话 (${totalCatClicks}次) | ${catEmotion}`
+                        `🎵 点击小猫听话 (${totalCatClicks}次)`
                     )
                 ]),
                 
@@ -799,7 +817,7 @@
                         key: "add" 
                     }, "+"),
                     
-                    // Row 4: 1 2 3 [=]
+                    // Row 4: 1 2 3
                     React.createElement('button', { 
                         className: "calc-button", 
                         onClick: () => inputNumber(1), 
@@ -810,14 +828,3 @@
                         onClick: () => inputNumber(2), 
                         key: "2" 
                     }, "2"),
-                    React.createElement('button', { 
-                        className: "calc-button", 
-                        onClick: () => inputNumber(3), 
-                        key: "3" 
-                    }, "3"),
-                    
-                    // Row 5: 0(wide) . [=]
-                    React.createElement('button', { 
-                        className: "calc-button zero", 
-                        onClick: () => inputNumber(0), 
-                        key:
