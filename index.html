@@ -2,10 +2,15 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>木心的计算器 - 最可爱的计算器</title>
     <meta name="description" content="木心的计算器 - 一个可爱的、有互动功能的在线计算器，适合小学生使用">
     <meta name="keywords" content="计算器,小学生,数学,可爱,互动,木心">
+    
+    <!-- PWA相关 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,19 +23,61 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         
+        .calculator-app {
+            width: 100vw;
+            height: 100vh;
+            max-width: 400px;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
         .calculator-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 0;
+            box-shadow: none;
             animation: fadeIn 0.8s ease-out;
+        }
+        
+        @media (min-width: 401px) {
+            .calculator-app {
+                border-radius: 24px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            }
+            .calculator-container {
+                border-radius: 24px;
+            }
         }
         
         @keyframes fadeIn {
@@ -44,38 +91,103 @@
             }
         }
         
-        .footer-info {
-            margin-top: 20px;
-            text-align: center;
+        .display-area {
+            flex: 1;
+            min-height: 35vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 32px 24px;
+        }
+        
+        .buttons-area {
+            flex: 0 0 auto;
+            height: 65vh;
+            max-height: 520px;
+            min-height: 400px;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            height: 100%;
+            gap: 1px;
+            background-color: #e5e7eb;
+        }
+        
+        .calc-button {
+            background: white;
+            border: none;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 400;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .calc-button:active {
+            background-color: #f3f4f6;
+            transform: scale(0.95);
+        }
+        
+        .calc-button.operator {
+            background: #ff9500;
             color: white;
-            font-size: 12px;
-            opacity: 0.8;
+            font-size: 32px;
         }
         
-        .footer-info a {
-            color: #ffd700;
-            text-decoration: none;
+        .calc-button.operator:active {
+            background-color: #e6820e;
         }
         
-        .footer-info a:hover {
-            text-decoration: underline;
+        .calc-button.function {
+            background: #a6a6a6;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .calc-button.function:active {
+            background-color: #8f8f8f;
+        }
+        
+        .calc-button.equals {
+            background: linear-gradient(135deg, #ff9500 0%, #ff8500 100%);
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            grid-row: 4 / 6;
+        }
+        
+        .calc-button.zero {
+            grid-column: 1 / 3;
+            justify-content: flex-start;
+            padding-left: 32px;
+        }
+        
+        /* 手机横屏适配 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .display-area {
+                min-height: 30vh;
+                padding: 16px 24px;
+            }
+            .buttons-area {
+                height: 70vh;
+                min-height: 300px;
+            }
+            .calc-button {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="calculator-container">
+    <div class="calculator-app">
         <div id="calculator-root"></div>
-        
-        <div class="footer-info">
-            <p>🌟 木心的计算器 v1.0 🌟</p>
-            <p>一个充满爱心的小工具 | 
-                <a href="https://github.com/your-username/muxin-calculator" target="_blank">GitHub</a> | 
-                <a href="#" onclick="showAbout()">关于我们</a>
-            </p>
-            <p style="font-size: 10px; margin-top: 8px; opacity: 0.6;">
-                © 2024 木心爸爸设计 | 让数学变得有趣
-            </p>
-        </div>
     </div>
 
     <script type="text/babel">
@@ -245,7 +357,9 @@
                 const isPageLoad = welcomeText === '' && !isTyping && totalCatClicks === 0;
                 if (!isPageLoad) return;
                 
-                triggerWelcome("嗨！我是木心，很高兴遇见你！点击我可以听到更多话哦～");
+                setTimeout(() => {
+                    triggerWelcome("嗨！我是木心，很高兴遇见你！点击我可以听到更多话哦～");
+                }, 500);
             }, [triggerWelcome, welcomeText, isTyping, totalCatClicks]);
 
             // 数字格式化
@@ -258,10 +372,10 @@
                     return '错误';
                 }
                 
-                if (value.length > 15) {
+                if (value.length > 12) {
                     const num = parseFloat(value);
                     if (!isNaN(num) && isFinite(num)) {
-                        return num.toExponential(8);
+                        return num.toExponential(6);
                     }
                 }
                 
@@ -273,15 +387,15 @@
                     return '错误';
                 }
                 
-                if (Number.isInteger(num) && Math.abs(num) < 1e15) {
+                if (Number.isInteger(num) && Math.abs(num) < 1e12) {
                     return num.toString();
                 }
                 
-                if (Math.abs(num) >= 1e15 || (Math.abs(num) < 1e-10 && num !== 0)) {
-                    return num.toExponential(8);
+                if (Math.abs(num) >= 1e12 || (Math.abs(num) < 1e-8 && num !== 0)) {
+                    return num.toExponential(6);
                 }
                 
-                let result = num.toPrecision(12);
+                let result = num.toPrecision(10);
                 result = parseFloat(result).toString();
                 
                 return result;
@@ -310,7 +424,7 @@
                     setWaitingForOperand(false);
                 } else {
                     const newDisplay = display === '0' ? String(num) : display + num;
-                    if (newDisplay.length <= 20) {
+                    if (newDisplay.length <= 15) {
                         setDisplay(newDisplay);
                     }
                 }
@@ -416,52 +530,16 @@
                 setOperation(nextOperation);
             }, [display, previousValue, operation, waitingForOperand, playSound]);
 
-            const Button = ({ onClick, className, children, ...props }) => {
-                const [pressed, setPressed] = useState(false);
-
-                return (
-                    <button
-                        className={`h-16 transition-all duration-100 border-r border-b border-gray-200 text-xl select-none ${className} ${
-                            pressed ? 'scale-95 shadow-inner' : 'hover:shadow-md'
-                        }`}
-                        onClick={onClick}
-                        onMouseDown={() => setPressed(true)}
-                        onMouseUp={() => setPressed(false)}
-                        onMouseLeave={() => setPressed(false)}
-                        onTouchStart={() => setPressed(true)}
-                        onTouchEnd={() => setPressed(false)}
-                        style={{ 
-                            borderWidth: '0.5px',
-                            transform: pressed ? 'scale(0.95)' : 'scale(1)',
-                        }}
-                        {...props}
-                    >
-                        {children}
-                    </button>
-                );
-            };
-
             const getFontSize = () => {
                 const len = display.length;
-                if (len <= 8) return '3.5rem';
-                if (len <= 12) return '2.8rem';
-                if (len <= 16) return '2.2rem';
-                if (len <= 20) return '1.8rem';
-                return '1.4rem';
-            };
-
-            const getNextWelcomeInfo = () => {
-                if (!hasShownFirstWelcome) {
-                    return "首次点击必显示";
-                } else {
-                    const nextEvenNumber = totalCatClicks % 2 === 0 ? totalCatClicks + 2 : totalCatClicks + 1;
-                    const remaining = nextEvenNumber - totalCatClicks;
-                    return `还需${remaining}次 (下次第${nextEvenNumber}次)`;
-                }
+                if (len <= 6) return '4rem';
+                if (len <= 9) return '3.2rem';
+                if (len <= 12) return '2.6rem';
+                return '2rem';
             };
 
             return React.createElement('div', {
-                className: "max-w-sm mx-auto bg-white shadow-2xl rounded-lg overflow-hidden",
+                className: "calculator-container",
                 onClick: () => {
                     if (!audioContextRef.current) {
                         try {
@@ -472,155 +550,208 @@
                     }
                 }
             }, [
-                // Header
+                // Header & Display Area
                 React.createElement('div', {
-                    className: "bg-white text-black py-6 px-5 border-b border-gray-200 flex items-center justify-between",
-                    style: { borderWidth: '0.5px' }
+                    className: "display-area bg-black text-white",
+                    key: "display-area"
                 }, [
+                    // Header
                     React.createElement('div', {
-                        className: `text-3xl cursor-pointer select-none transition-all duration-300 hover:scale-110 ${catAnimation}`,
-                        onClick: handleCatClick,
-                        title: "点击我互动！",
-                        key: "cat"
-                    }, catEmotion),
-                    React.createElement('h1', {
-                        className: "text-base font-light tracking-wider",
-                        key: "title"
-                    }, "木心的计算器"),
+                        className: "flex items-center justify-between mb-4",
+                        key: "header"
+                    }, [
+                        React.createElement('div', {
+                            className: `text-2xl cursor-pointer select-none transition-all duration-300 hover:scale-110 ${catAnimation}`,
+                            onClick: handleCatClick,
+                            title: "点击我互动！",
+                            key: "cat"
+                        }, catEmotion),
+                        React.createElement('h1', {
+                            className: "text-sm font-light tracking-wider text-gray-300",
+                            key: "title"
+                        }, "木心的计算器"),
+                        React.createElement('div', {
+                            className: "text-xs text-gray-500",
+                            key: "ai"
+                        }, "AI")
+                    ]),
+                    
+                    // Display
+                    showWelcome ? 
+                        React.createElement('div', {
+                            className: "flex-1 flex items-center justify-center text-center",
+                            key: "welcome"
+                        }, React.createElement('div', {
+                            className: `font-light transition-opacity duration-500 ${isTyping ? 'opacity-100' : 'opacity-0'}`,
+                            style: { 
+                                fontSize: '1.2rem',
+                                letterSpacing: '1px',
+                                lineHeight: '1.5',
+                                color: '#fff'
+                            }
+                        }, [
+                            welcomeText,
+                            isTyping && React.createElement('span', {
+                                className: "animate-pulse ml-1 text-orange-400",
+                                key: "cursor"
+                            }, "|")
+                        ])) :
+                        React.createElement('div', {
+                            className: "flex-1 flex items-end justify-end",
+                            key: "display"
+                        }, React.createElement('div', {
+                            className: "text-right font-thin overflow-hidden",
+                            style: { 
+                                fontWeight: '200',
+                                letterSpacing: '2px',
+                                fontSize: getFontSize(),
+                                wordBreak: 'break-all'
+                            }
+                        }, formatDisplay(display))),
+                    
+                    // Status
                     React.createElement('div', {
-                        className: "text-xs text-gray-400 font-light",
-                        key: "ai"
-                    }, "AI设计")
+                        className: "mt-4 text-xs text-gray-400 text-center",
+                        key: "status"
+                    }, showWelcome ? 
+                        '🎵 木心在说话...' : 
+                        `🎵 点击小猫听话 (${totalCatClicks}次) | ${catEmotion}`
+                    )
                 ]),
-                
-                // Display
-                React.createElement('div', {
-                    className: "bg-white text-black px-8 py-12 border-b border-gray-200 min-h-24",
-                    style: { borderWidth: '0.5px' },
-                    key: "display"
-                }, showWelcome ? 
-                    React.createElement('div', {
-                        className: "text-center flex items-center justify-center"
-                    }, React.createElement('div', {
-                        className: `font-light transition-opacity duration-500 ${isTyping ? 'opacity-100' : 'opacity-0'}`,
-                        style: { 
-                            fontSize: '1.1rem',
-                            letterSpacing: '1px',
-                            lineHeight: '1.4',
-                            color: '#333'
-                        }
-                    }, [
-                        welcomeText,
-                        isTyping && React.createElement('span', {
-                            className: "animate-pulse ml-1 text-orange-500",
-                            key: "cursor"
-                        }, "|")
-                    ])) :
-                    React.createElement('div', {
-                        className: "text-right font-thin flex items-end justify-end overflow-hidden",
-                        style: { 
-                            fontWeight: '100',
-                            letterSpacing: '1px',
-                            fontSize: getFontSize(),
-                            wordBreak: 'break-all',
-                            minHeight: '60px'
-                        }
-                    }, React.createElement('div', {
-                        className: "flex items-end"
-                    }, [
-                        React.createElement('span', { key: "display-text" }, formatDisplay(display)),
-                        operation && React.createElement('span', {
-                            className: "ml-2 text-orange-500 text-2xl animate-pulse",
-                            key: "operation"
-                        }, operation)
-                    ]))
-                ),
                 
                 // Buttons
                 React.createElement('div', {
-                    className: "bg-white",
-                    style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gridTemplateRows: 'repeat(5, 64px)' },
+                    className: "buttons-area",
                     key: "buttons"
+                }, React.createElement('div', {
+                    className: "button-grid"
                 }, [
                     // Row 1
-                    React.createElement(Button, { onClick: clear, className: "bg-gray-50 hover:bg-gray-100 text-black", key: "C" }, "C"),
-                    React.createElement(Button, { onClick: backspace, className: "bg-gray-50 hover:bg-gray-100 text-black", key: "back" }, "⌫"),
-                    React.createElement(Button, { onClick: () => performOperation('÷'), className: "bg-black hover:bg-gray-800 text-white text-2xl", key: "div" }, "÷"),
-                    React.createElement(Button, { onClick: () => performOperation('×'), className: "bg-black hover:bg-gray-800 text-white text-2xl", key: "mul" }, "×"),
+                    React.createElement('button', { 
+                        className: "calc-button function", 
+                        onClick: clear, 
+                        key: "C" 
+                    }, "C"),
+                    React.createElement('button', { 
+                        className: "calc-button function", 
+                        onClick: backspace, 
+                        key: "back" 
+                    }, "⌫"),
+                    React.createElement('button', { 
+                        className: "calc-button function", 
+                        onClick: () => performOperation('÷'), 
+                        key: "div" 
+                    }, "÷"),
+                    React.createElement('button', { 
+                        className: "calc-button operator", 
+                        onClick: () => performOperation('×'), 
+                        key: "mul" 
+                    }, "×"),
                     
                     // Row 2
-                    React.createElement(Button, { onClick: () => inputNumber(7), className: "bg-white hover:bg-gray-50 text-black", key: "7" }, "7"),
-                    React.createElement(Button, { onClick: () => inputNumber(8), className: "bg-white hover:bg-gray-50 text-black", key: "8" }, "8"),
-                    React.createElement(Button, { onClick: () => inputNumber(9), className: "bg-white hover:bg-gray-50 text-black", key: "9" }, "9"),
-                    React.createElement(Button, { onClick: () => performOperation('−'), className: "bg-black hover:bg-gray-800 text-white text-2xl", key: "sub" }, "−"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(7), 
+                        key: "7" 
+                    }, "7"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(8), 
+                        key: "8" 
+                    }, "8"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(9), 
+                        key: "9" 
+                    }, "9"),
+                    React.createElement('button', { 
+                        className: "calc-button operator", 
+                        onClick: () => performOperation('−'), 
+                        key: "sub" 
+                    }, "−"),
                     
                     // Row 3
-                    React.createElement(Button, { onClick: () => inputNumber(4), className: "bg-white hover:bg-gray-50 text-black", key: "4" }, "4"),
-                    React.createElement(Button, { onClick: () => inputNumber(5), className: "bg-white hover:bg-gray-50 text-black", key: "5" }, "5"),
-                    React.createElement(Button, { onClick: () => inputNumber(6), className: "bg-white hover:bg-gray-50 text-black", key: "6" }, "6"),
-                    React.createElement(Button, { onClick: () => performOperation('+'), className: "bg-black hover:bg-gray-800 text-white text-2xl", key: "add" }, "+"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(4), 
+                        key: "4" 
+                    }, "4"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(5), 
+                        key: "5" 
+                    }, "5"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(6), 
+                        key: "6" 
+                    }, "6"),
+                    React.createElement('button', { 
+                        className: "calc-button operator", 
+                        onClick: () => performOperation('+'), 
+                        key: "add" 
+                    }, "+"),
                     
-                    // Row 4-5
-                    React.createElement(Button, { onClick: () => inputNumber(1), className: "bg-white hover:bg-gray-50 text-black", key: "1" }, "1"),
-                    React.createElement(Button, { onClick: () => inputNumber(2), className: "bg-white hover:bg-gray-50 text-black", key: "2" }, "2"),
-                    React.createElement(Button, { onClick: () => inputNumber(3), className: "bg-white hover:bg-gray-50 text-black", key: "3" }, "3"),
-                    React.createElement('button', {
-                        onClick: () => performOperation('='),
-                        className: "bg-gradient-to-b from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-bold text-3xl transition-all duration-150 active:scale-95 shadow-lg border-r border-b border-orange-500",
-                        style: { 
-                            borderWidth: '0.5px',
-                            gridRow: '4 / 6',
-                            gridColumn: '4 / 5'
-                        },
-                        key: "equals"
-                    }, "="),
+                    // Row 4
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(1), 
+                        key: "1" 
+                    }, "1"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(2), 
+                        key: "2" 
+                    }, "2"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: () => inputNumber(3), 
+                        key: "3" 
+                    }, "3"),
                     
-                    React.createElement(Button, { onClick: () => inputNumber(0), className: "bg-white hover:bg-gray-50 text-black", style: { gridColumn: '1 / 3' }, key: "0" }, "0"),
-                    React.createElement(Button, { onClick: inputDot, className: "bg-white hover:bg-gray-50 text-black", key: "dot" }, "·")
-                ]),
-                
-                // Footer
-                React.createElement('div', {
-                    className: "bg-white py-4 text-center border-t border-gray-200",
-                    style: { borderWidth: '0.5px' },
-                    key: "footer"
-                }, [
-                    React.createElement('p', {
-                        className: "text-xs text-gray-400 font-light tracking-wider",
-                        style: { letterSpacing: '2px' },
-                        key: "designer"
-                    }, "木心爸爸设计"),
-                    React.createElement('p', {
-                        className: "text-xs text-gray-300 mt-1",
-                        key: "status"
-                    }, showWelcome ? '🎵 木心在说话...' : `🎵 点击小猫听话 (${totalCatClicks}次)`),
-                    React.createElement('p', {
-                        className: "text-xs text-gray-200 mt-1",
-                        key: "info"
-                    }, showWelcome ? 
-                        `💬 "${welcomeText}"` :
-                        `😸 ${catEmotion} | 欢迎语规则: ${getNextWelcomeInfo()}`
-                    )
-                ])
+                    // Row 5
+                    React.createElement('button', { 
+                        className: "calc-button zero", 
+                        onClick: () => inputNumber(0), 
+                        key: "0" 
+                    }, "0"),
+                    React.createElement('button', { 
+                        className: "calc-button", 
+                        onClick: inputDot, 
+                        key: "dot" 
+                    }, "."),
+                    
+                    // Equals button (spans 2 rows)
+                    React.createElement('button', { 
+                        className: "calc-button equals", 
+                        onClick: () => performOperation('='), 
+                        key: "equals" 
+                    }, "=")
+                ]))
             ]);
         };
 
         // 渲染应用
         ReactDOM.render(React.createElement(Calculator), document.getElementById('calculator-root'));
 
-        // 全局函数
-        window.showAbout = function() {
-            alert('🌟 木心的计算器 v1.0\n\n一个充满爱心的计算器工具\n\n特色功能：\n• 🐱 可爱的小猫互动\n• 🎵 悦耳的音效系统\n• 💬 温馨的欢迎消息\n• 📱 完美的响应式设计\n\n适合小学生使用，让数学变得有趣！\n\n© 2024 木心爸爸设计');
-        };
-    </script>
+        // 防止页面缩放和滚动
+        document.addEventListener('touchmove', function (event) {
+            if (event.scale !== 1) { event.preventDefault(); }
+        }, { passive: false });
 
-    <!-- Google Analytics (可选) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
-    <!-- <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script> -->
+        document.addEventListener('gesturestart', function (event) {
+            event.preventDefault();
+        });
+
+        // 防止双击缩放
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
 </body>
 </html>
